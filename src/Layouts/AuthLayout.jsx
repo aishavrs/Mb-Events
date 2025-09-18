@@ -2,16 +2,20 @@ import React from 'react'
 
 export default function AuthLayout({ children, image }) {
   return (
-    <div className="flex justify-center items-center gap-3 container mx-auto">
+    <div className="container mx-auto flex justify-center h-screen">
 
-      <div className="hidden md:block w-1/2 lg:h-[850px] p-4">
-        <img src={image} alt="" className=" w-full h-full object-cover rounded-[10px] " />
+      <div className="hidden lg:flex items-center h-full w-1/2 ">
+        <img 
+          src={image} 
+          alt="" 
+          className='objet-fit'
+        />
       </div>
 
-      <div className="w-full md:w-1/2 flex flex-col ">
+      <div className="w-full lg:w-1/2 flex items-center ">
         {children}
       </div>
-      
+
     </div>
   )
 }
