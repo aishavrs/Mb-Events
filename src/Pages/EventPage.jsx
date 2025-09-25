@@ -15,8 +15,8 @@ export default function EventPage() {
   return (
     <AppLayout>
       {/* Search + Filters Section */}
-      <section className="w-full bg-black py-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+      <section className="page-section bg-black">
+        <div className="page-container flex flex-col items-center">
           
           {/* Search bar */}
           <div className="flex gap-2 justify-start items-center w-full sm:w-[80%] md:w-[70%] bg-white px-3 py-3 rounded-md">
@@ -61,7 +61,9 @@ export default function EventPage() {
       </section>
 
       {/* Events list */}
-      <AllEvents />
+      <section className="page-section">
+          <AllEvents />
+      </section>
     </AppLayout>
   )
 }

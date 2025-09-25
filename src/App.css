@@ -1,21 +1,37 @@
 @import "tailwindcss";
-body{
+
+@layer components {
+  /* ✅ Consistent container for all sections */
+  .page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-12;
+  }
+
+  /* ✅ Consistent section wrapper */
+  .page-section {
+    @apply w-full py-10;
+  }
+}
+
+body {
   font-family: Space Grotesk;
 }
 
-.toggle-container{
+/* ================== TOGGLE SWITCHES ================== */
+
+.toggle-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 20px;
-  gap:50px;
+  gap: 50px;
   background-color: white;
 }
 
-.toggle-input{
+.toggle-input {
   display: none;
 }
-.toggle-label{
+
+.toggle-label {
   width: 60px;
   height: 30px;
   background: #ccc;
@@ -25,7 +41,7 @@ body{
   transition: background-color 0.3s;
 }
 
-.toggle-label:after{
+.toggle-label:after {
   content: "";
   position: absolute;
   width: 26px;
@@ -36,27 +52,30 @@ body{
   left: 2px;
   transition: transform 0.3s ease;
 }
-.toggle-input:checked + .toggle-label{
+
+.toggle-input:checked + .toggle-label {
   background-color: rgb(159, 56, 232);
 }
-.toggle-input:checked + .toggle-label::after{
+
+.toggle-input:checked + .toggle-label::after {
   transform: translateX(30px);
 }
 
-
-.toggle-containerFree{
+/* Free Toggle */
+.toggle-containerFree {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 15px;
-  gap:50px;
+  gap: 50px;
   background-color: white;
 }
 
-.toggle-inputFree{
+.toggle-inputFree {
   display: none;
 }
-.toggle-labelFree{
+
+.toggle-labelFree {
   width: 40px;
   height: 20px;
   background: #ccc;
@@ -66,7 +85,7 @@ body{
   transition: background-color 0.3s;
 }
 
-.toggle-labelFree:after{
+.toggle-labelFree:after {
   content: "";
   position: absolute;
   width: 16px;
@@ -77,27 +96,30 @@ body{
   left: 2px;
   transition: transform 0.3s ease;
 }
-.toggle-inputFree:checked + .toggle-labelFree{
+
+.toggle-inputFree:checked + .toggle-labelFree {
   background-color: rgb(159, 56, 232);
 }
-.toggle-inputFree:checked + .toggle-labelFree::after{
+
+.toggle-inputFree:checked + .toggle-labelFree::after {
   transform: translateX(20px);
 }
 
-
-.toggle-containerRegular{
+/* Regular Toggle */
+.toggle-containerRegular {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 15px;
-  gap:50px;
+  gap: 50px;
   background-color: white;
 }
 
-.toggle-inputRegular{
+.toggle-inputRegular {
   display: none;
 }
-.toggle-labelRegular{
+
+.toggle-labelRegular {
   width: 40px;
   height: 20px;
   background: #ccc;
@@ -107,7 +129,7 @@ body{
   transition: background-color 0.3s;
 }
 
-.toggle-labelRegular::after{
+.toggle-labelRegular::after {
   content: "";
   position: absolute;
   width: 16px;
@@ -118,27 +140,30 @@ body{
   left: 2px;
   transition: transform 0.3s ease;
 }
-.toggle-inputRegular:checked + .toggle-labelRegular{
+
+.toggle-inputRegular:checked + .toggle-labelRegular {
   background-color: rgb(159, 56, 232);
 }
-.toggle-inputRegular:checked + .toggle-labelRegular::after{
+
+.toggle-inputRegular:checked + .toggle-labelRegular::after {
   transform: translateX(20px);
 }
 
-
-.toggle-containerVIP{
+/* VIP Toggle */
+.toggle-containerVIP {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 15px;
-  gap:50px;
+  gap: 50px;
   background-color: white;
 }
 
-.toggle-inputVIP{
+.toggle-inputVIP {
   display: none;
 }
-.toggle-labelVIP{
+
+.toggle-labelVIP {
   width: 40px;
   height: 20px;
   background: #ccc;
@@ -148,7 +173,7 @@ body{
   transition: background-color 0.3s;
 }
 
-.toggle-labelVIP::after{
+.toggle-labelVIP::after {
   content: "";
   position: absolute;
   width: 16px;
@@ -159,9 +184,11 @@ body{
   left: 2px;
   transition: transform 0.3s ease;
 }
-.toggle-inputVIP:checked + .toggle-labelVIP{
+
+.toggle-inputVIP:checked + .toggle-labelVIP {
   background-color: rgb(159, 56, 232);
 }
-.toggle-inputVIP:checked + .toggle-labelVIP::after{
+
+.toggle-inputVIP:checked + .toggle-labelVIP::after {
   transform: translateX(20px);
 }

@@ -4,7 +4,7 @@ import locationIcon from '../assets/location-svgrepo-com 1.png'
 import calendarIcon from '../assets/calendar-svgrepo-com.png'
 import ticketIcon from '../assets/ticket-svgrepo-com.png'
 
-export default function SingleEvent({ id, img, title, host, category, location, date, tickets }) {
+export default function SingleEvent({ id, img, title, host, category, location, date, pricing }) {
   return (
     <Link 
       to={`/event/${id}`} 
@@ -28,7 +28,9 @@ export default function SingleEvent({ id, img, title, host, category, location, 
 
       <div className="flex items-center gap-2">
         <img src={ticketIcon} alt="Tickets" className="w-5 h-5" />
-        <span>{tickets}</span>
+        <span>
+          {pricing?.map(ticket => ticket.type).join(', ')}
+        </span>
       </div>
     </Link>
   )

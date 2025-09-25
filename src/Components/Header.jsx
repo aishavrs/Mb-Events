@@ -3,80 +3,89 @@ import mbLogo from '../assets/mb-event-logo.png';
 import { Link, useLocation } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { AuthContext } from '../Context/AuthContext';
-import { LuCalendarRange, LuLogOut, LuUserRoundPen, LuSettings, LuCircleHelp, LuChevronDown  } from "react-icons/lu";
-
+import {
+  LuCalendarRange,
+  LuLogOut,
+  LuUserRoundPen,
+  LuSettings,
+  LuCircleHelp,
+  LuChevronDown,
+} from "react-icons/lu";
 
 export default function Header() {
   const location = useLocation();
-  const {user, logout} = useContext(AuthContext)
+  const { user, logout } = useContext(AuthContext);
 
   const getInitials = (fullName) => {
-  if (!fullName) return "";
-
-  const parts = fullName.trim().split(" ");
-  if (parts.length === 1) {
-    // If only one name, take the first two letters
-    return parts[0].slice(0, 2).toUpperCase();
-  }
-
-  // Otherwise take first letter of first name + first letter of last name
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-};
+    if (!fullName) return "";
+    const parts = fullName.trim().split(" ");
+    return parts.length === 1
+      ? parts[0].slice(0, 2).toUpperCase()
+      : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
 
   const userMenuLinks = [
-    {
-      id: 1,
-      content: "Your Events",
-      to: "/",
-      icon: <LuCalendarRange className='text-dark'/>
+    { id: 1, content: "Your Events", to: "/yourevents", icon: <LuCalendarRange /> },
+    { id: 2, content: "Profile", to: "/", icon: <LuUserRoundPen /> },
+    { id: 3, content: "Settings", to: "/", icon: <LuSettings /> },
+    { id: 4, content: "Help", to: "/", icon: <LuCircleHelp /> },
+  ];
 
-    },
-    {
-      id: 2,
-      content: "Profile",
-      to: "/",
-      icon: <LuUserRoundPen  className='text-dark'/>
+  const UserMenu = () => {
+    const [isOpen, setIsOpen] = useState(false);
 
-    },
-    {
-      id: 3,
-      content: "Settings",
-      to: "/",
-      icon: <LuSettings  className='text-dark'/>
+    const handleLogout = () => {
+      logout();
+      setIsOpen(false);
+    };
 
-    },
-    {
-      id: 4,
-      content: "Help",
-      to: "/",
-      icon: <LuCircleHelp  className='text-dark'/>
+    return (
+      <div className="relative flex items-center gap-2">
+        {/* Avatar */}
+        <div className="inline-flex items-center justify-center rounded-full border border-[#9747FF]
+          bg-[#D9D9D9] w-12 h-12 sm:w-14 sm:h-14 text-lg sm:text-xl font-bold text-gray-800">
+          {getInitials(user.fullName)}
+        </div>
 
-    }
-  ]
+        {/* Toggle */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center text-gray-700 hover:text-[#9747FF] transition"
+        >
+          <LuChevronDown className={`transition-transform ${isOpen ? 'rotate-180' : 'rotate-0'}`} />
+        </button>
 
-  const UserMenu = () =>{
-    const [isOpen, setIsOpen] = useState(false)
-    const handleLogout = () =>{
-      logout()
-      setIsOpen(false)
-    }
-    return(
-      <div className='flex gap-[10px]'>
-            <div className="inline-flex items-center justify-center rounded-full border border-[#9747FF]
-             bg-[#D9D9D9] w-16 h-16 text-2xl font-bold">{getInitials(user.fullName)}
-            </div>
-            <button onClick={()=> setIsOpen(!isOpen)}><LuChevronDown/> </button>
-            {isOpen && (
-              <div>
-                {userMenuLinks.map((link)=>{
-                  return <Link key={link.id} to={link.to}><span>{link.icon}</span>{link.content}</Link>
-                })}
-                <button onClick={handleLogout}><span className='text-red-600'><LuLogOut/></span></button>
-              </div>)}
-
-            </div>
-    )
-  }
+        {/* Dropdown */}
+        {isOpen && (
+          <div className="absolute right-0 top-14 w-48 bg-white shadow-lg rounded-lg border border-gray-100 z-50">
+            <ul className="flex flex-col divide-y divide-gray-100">
+              {userMenuLinks.map((link) => (
+                <li key={link.id}>
+                  <Link
+                    to={link.to}
+                    className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-[#9747FF] hover:text-white transition"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {link.icon}
+                    {link.content}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-3 w-full px-4 py-2 text-red-600 hover:bg-red-50 transition"
+                >
+                  <LuLogOut />
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const links = [
     { id: 1, pathName: 'Home', to: '/' },
@@ -88,7 +97,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto flex justify-between items-center py-5 px-4 sm:px-6 lg:px-12">
+      <div className="page-container flex justify-between items-center py-5">
         {/* --- Logo --- */}
         <a href="/">
           <img
@@ -98,6 +107,7 @@ export default function Header() {
           />
         </a>
 
+        {/* --- Desktop Nav --- */}
         <nav className="hidden md:flex gap-10">
           {links.map((link) => (
             <Link
@@ -114,23 +124,29 @@ export default function Header() {
           ))}
         </nav>
 
+        {/* --- Auth Buttons / User Menu --- */}
         <div className="hidden md:flex gap-4">
-         {user ? <UserMenu /> : (<div className='flex gap-4'>
-           <Link
-            to="/sign-up"
-            className="rounded py-2 px-4 sm:py-3 sm:px-6 bg-[#9747FF] text-white"
-          >
-            Sign Up
-          </Link>
-          <Link
-            to="/sign-in"
-            className="rounded py-2 px-4 sm:py-3 sm:px-6 border border-[#9747FF] text-black"
-          >
-            Sign In
-          </Link>
-         </div>)}
+          {user ? (
+            <UserMenu />
+          ) : (
+            <div className="flex gap-4">
+              <Link
+                to="/sign-up"
+                className="rounded py-2 px-4 sm:py-3 sm:px-6 bg-[#9747FF] text-white"
+              >
+                Sign Up
+              </Link>
+              <Link
+                to="/sign-in"
+                className="rounded py-2 px-4 sm:py-3 sm:px-6 border border-[#9747FF] text-black"
+              >
+                Sign In
+              </Link>
+            </div>
+          )}
         </div>
 
+        {/* --- Mobile Menu Toggle --- */}
         <button
           onClick={() => setMenuOpen((prev) => !prev)}
           className="md:hidden text-3xl text-[#9747FF] z-[60] relative"
@@ -141,6 +157,7 @@ export default function Header() {
         </button>
       </div>
 
+      {/* --- Mobile Menu --- */}
       <div
         className={`md:hidden fixed top-0 right-0 h-full w-1/2 z-50 transform transition-transform duration-300
           ${menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}
@@ -168,27 +185,27 @@ export default function Header() {
           </nav>
 
           <div className="flex flex-col gap-4 mt-6">
-          {user ? (
-            <UserMenu />) : (
-            <>
-              <Link
-                to="/sign-up"
-                className="rounded py-2 px-4 bg-[#9747FF] text-white text-center"
-                onClick={() => setMenuOpen(false)}
-              >
-                Sign Up
-              </Link>
-              <Link
-                to="/sign-in"
-                className="rounded py-2 px-4 border border-[#9747FF] text-black text-center"
-                onClick={() => setMenuOpen(false)}
-              >
-                Sign In
-              </Link>
-            </>
-          )}
-        </div>
-
+            {user ? (
+              <UserMenu />
+            ) : (
+              <>
+                <Link
+                  to="/sign-up"
+                  className="rounded py-2 px-4 bg-[#9747FF] text-white text-center"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Sign Up
+                </Link>
+                <Link
+                  to="/sign-in"
+                  className="rounded py-2 px-4 border border-[#9747FF] text-black text-center"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </header>

@@ -1,66 +1,50 @@
-import React, { useContext, useState } from "react";
+import React, { useState, useContext } from "react";
 import AuthLayout from "../Layouts/AuthLayout";
-import signUpImage from "../assets/sign-up-image.png";
+import signInImage from "../assets/sign-in-image.png";
 import MbEventLogo from "../assets/mb-event-logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
-import { Eye, EyeOff } from "lucide-react";
+import { toast } from "react-toastify";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-export default function SignUpPage() {
-  const { register } = useContext(AuthContext);
+export default function SignInPage() {
+  const { login } = useContext(AuthContext);
 
-  const [isloading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: "",
-    fullName: "",
-    password: "",
-    confirmPassword: "",
-    checkBox: false,
+    password: ""
   });
 
-  const [error, setError] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (event) => {
-    const { name, value, type, checked } = event.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
-    setError((prevError) => ({ ...prevError, [name]: "" }));
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const isValidEmail = (email) => {
+    // simple regex for email format validation
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
   const validateForm = () => {
-    const { fullName, email, password, confirmPassword, checkBox } = formData;
-    const newErrors = {};
-
-    if (!fullName.trim()) newErrors.fullName = "Name is required";
-    if (!email.trim()) newErrors.email = "Email is required";
-
-    // Password requirements: min 8 chars, at least 1 uppercase, 1 number, 1 special char
-    const passwordRegex =
-      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-
+    const { email, password } = formData;
+    if (!email.trim()) {
+      toast.error("Email is required");
+      return false;
+    }
+    if (!isValidEmail(email)) {
+      toast.error("Please enter a valid email");
+      return false;
+    }
     if (!password.trim()) {
-      newErrors.password = "Password is required";
-    } else if (!passwordRegex.test(password)) {
-      newErrors.password =
-        "Password must be at least 8 characters, include an uppercase letter, a number, and a special character";
+      toast.error("Password is required");
+      return false;
     }
-
-    if (!confirmPassword.trim()) {
-      newErrors.confirmPassword = "Please re-enter password";
-    } else if (password && confirmPassword && password !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
-
-    if (!checkBox) newErrors.checkBox = "You must accept the terms";
-
-    setError(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return true;
   };
 
   const handleSubmit = async (e) => {
@@ -72,12 +56,13 @@ export default function SignUpPage() {
       return;
     }
 
-    setError({});
     try {
-      await register(formData);
-      navigate("/sign-in");
-    } catch (error) {
-      setError("Something went wrong, Try again!");
+      await login(formData);
+      toast.success("Login successful!");
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.message || "Incorrect email or password!");
     } finally {
       setIsLoading(false);
     }
@@ -85,141 +70,82 @@ export default function SignUpPage() {
 
   return (
     <div>
-      <AuthLayout image={signUpImage}>
-        <div className="flex flex-col gap-[15px] lg:gap-[28px]">
-          <div className="flex flex-col lg:justify-center items-center">
-            <img src={MbEventLogo} alt="" className="mt-5 lg:mt-0" />
+      <AuthLayout image={signInImage}>
+        <div className="flex flex-col items-center lg:mt-[12%] w-full">
+          <div className="flex justify-center mb-6">
+            <img
+              src={MbEventLogo}
+              alt="MB Event Logo"
+              className="w-32 sm:w-40 md:w-44 lg:w-48"
+            />
           </div>
 
-          <div className="flex flex-col px-6 lg:px-17 gap-[2px] lg:gap-[5px]">
-            <div>
-              <h1 className="text-[28px] lg:text-[32px] font-semibold lg:font-bold">
-                Create Account
+          <div className="w-full max-w-md lg:max-w-lg px-6 sm:px-10 lg:px-0">
+            <div className="mb-6 text-center lg:text-left">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
+                Welcome Back
               </h1>
-              <p className="text-[15px] lg:text-[20px] font-medium lg:font-semibold">
-                Let’s get you started so you can start joining and creating
-                events
+              <p className="text-base sm:text-lg lg:text-xl font-medium text-gray-700">
+                Sign In To Your Account
               </p>
             </div>
 
             <form
               onSubmit={handleSubmit}
-              className="flex flex-col gap-[12px] lg:gap-[15px]"
+              className="flex flex-col gap-4 sm:gap-5"
             >
-              {/* Email */}
-              <input
-                type="text"
-                onChange={handleChange}
-                name="email"
-                value={formData.email}
-                placeholder="Email"
-                className="h-[44px] px-[10px] border border-[#CDC7C7] rounded-[6px]"
-              />
-              {error.email && (
-                <p className="text-red-500 text-xs">{error.email}</p>
-              )}
+              <div>
+                <input
+                  type="text"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Email"
+                  className="w-full h-12 sm:h-14 px-4 border border-gray-300 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-[#9747FF]"
+                />
+              </div>
 
-              {/* Fullname */}
-              <input
-                type="text"
-                onChange={handleChange}
-                name="fullName"
-                value={formData.fullName}
-                placeholder="Fullname"
-                className="h-[44px] px-[10px] border border-[#CDC7C7] rounded-[6px]"
-              />
-              {error.fullName && (
-                <p className="text-red-500 text-xs">{error.fullName}</p>
-              )}
-
-              {/* Password */}
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  onChange={handleChange}
                   name="password"
                   value={formData.password}
+                  onChange={handleChange}
                   placeholder="Password"
-                  className="h-[44px] w-full px-[10px] pr-10 border border-[#CDC7C7] rounded-[6px]"
+                  className="w-full h-12 sm:h-14 px-4 pr-12 border border-gray-300 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-[#9747FF]"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500"
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-              {error.password && (
-                <p className="text-red-500 text-xs">{error.password}</p>
-              )}
 
-              {/* Confirm Password */}
-              <div className="relative">
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  onChange={handleChange}
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  placeholder="Confirm Password"
-                  className="h-[44px] w-full px-[10px] pr-10 border border-[#CDC7C7] rounded-[6px]"
-                />
-                <button
-                  type="button"
-                  onClick={() =>
-                    setShowConfirmPassword(!showConfirmPassword)
-                  }
-                  className="absolute inset-y-0 right-3 flex items-center text-gray-500"
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
-                </button>
-              </div>
-              {error.confirmPassword && (
-                <p className="text-red-500 text-xs">{error.confirmPassword}</p>
-              )}
+              <Link
+                to="/forgot-password"
+                className="text-sm sm:text-base text-[#9747FF] underline self-end"
+              >
+                Forgot Password?
+              </Link>
 
-              {/* Terms */}
-              <div className="flex gap-2 items-center">
-                <input
-                  type="checkbox"
-                  name="checkBox"
-                  checked={formData.checkBox}
-                  onChange={handleChange}
-                />
-                <label className="text-[13px]">
-                  I agree to the{" "}
-                  <a href="#" className="text-[#9747FF] underline">
-                    terms
-                  </a>{" "}
-                  &{" "}
-                  <a href="#" className="text-[#9747FF] underline">
-                    conditions
-                  </a>
-                </label>
-              </div>
-              {error.checkBox && (
-                <p className="text-red-500 text-xs">{error.checkBox}</p>
-              )}
-
-              {/* Submit */}
-              <div className="flex flex-col gap-[20px] mt-5 lg:mt-10">
+              <div className="flex flex-col gap-6 mt-6">
                 <button
                   type="submit"
-                  className="rounded-[4px] py-[12px] px-[36px] bg-[#9747FF] text-white"
+                  disabled={isLoading || !isValidEmail(formData.email)}
+                  className="w-full rounded-md py-3 sm:py-4 bg-[#9747FF] text-white text-lg font-medium hover:bg-purple-700 transition disabled:opacity-50"
                 >
-                  {isloading ? "Signing up..." : "Sign up"}
+                  {isLoading ? "Signing in..." : "Sign In"}
                 </button>
-                <p className="lg:text-[20px]">
-                  Already have an account?
+
+                <p className="text-center text-base sm:text-lg">
+                  Don’t have an account?
                   <Link
-                    to="/sign-in"
-                    className="font-extrabold text-[#9747FF] ml-1"
+                    to="/sign-up"
+                    className="font-bold text-[#9747FF] ml-1 hover:underline"
                   >
-                    Sign In
+                    Sign Up
                   </Link>
                 </p>
               </div>

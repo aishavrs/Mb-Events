@@ -18,6 +18,8 @@ import EventDetails from './Pages/EventDetails'
 import Error from './Pages/Error'
 import CreateEvent from './Pages/CreateEvent'
 import ComingSoon from './Components/ComingSoon'
+import ProtectRoute from './Components/ProtectRoute'
+import YourEvents from './Pages/YourEvents'
 
 
 
@@ -38,12 +40,13 @@ export default function App() {
       <Route path='/all-events' element={<AllEvents/>}/>
       <Route path='/hero' element={<HeroSection/>}/>
       <Route path='/' element={<HomePage/>}/>
-      <Route path='/event' element={<EventPage/>}/>
+      <Route path='/event' element={<ProtectRoute><EventPage/></ProtectRoute>}/>
       <Route path='/event-details' element={<EventDetails/>}/>
       <Route path='*' element={<Error/>}/>
       <Route path="/event/:id" element={<EventDetails/>} />
-      <Route path="/create-event" element={<CreateEvent/>} />
+      <Route path="/create-event" element={<ProtectRoute><CreateEvent/></ProtectRoute>} />
       <Route path="/comingsoon" element={<ComingSoon/>} />
+      <Route path="/yourevents" element={<ProtectRoute><YourEvents/></ProtectRoute>} />
 
 
     </Routes>

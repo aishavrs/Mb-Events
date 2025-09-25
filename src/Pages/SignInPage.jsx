@@ -5,6 +5,7 @@ import MbEventLogo from "../assets/mb-event-logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
 import { toast } from "react-toastify";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function SignInPage() {
   const { login } = useContext(AuthContext);
@@ -16,6 +17,8 @@ export default function SignInPage() {
     email: "",
     password: ""
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -93,15 +96,22 @@ export default function SignInPage() {
                 />
               </div>
 
-              <div>
+              <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Password"
-                  className="w-full h-12 sm:h-14 px-4 border border-gray-300 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-[#9747FF]"
+                  className="w-full h-12 sm:h-14 px-4 pr-12 border border-gray-300 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-[#9747FF]"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
               </div>
 
               <Link
