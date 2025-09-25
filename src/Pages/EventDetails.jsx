@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { usePaystackPayment } from 'react-paystack'
 import { useParams, Link } from 'react-router-dom'
 import { LuChevronRight } from 'react-icons/lu'
 import calendarIcon from '../assets/calendar-svgrepo-com.png'
