@@ -15,6 +15,7 @@ import {
 export default function Header() {
   const location = useLocation();
   const { user, logout } = useContext(AuthContext);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const getInitials = (fullName) => {
     if (!fullName) return "";
@@ -26,9 +27,9 @@ export default function Header() {
 
   const userMenuLinks = [
     { id: 1, content: "Your Events", to: "/yourevents", icon: <LuCalendarRange /> },
-    { id: 2, content: "Profile", to: "/", icon: <LuUserRoundPen /> },
-    { id: 3, content: "Settings", to: "/", icon: <LuSettings /> },
-    { id: 4, content: "Help", to: "/", icon: <LuCircleHelp /> },
+    { id: 2, content: "Profile", to: "/profile", icon: <LuUserRoundPen /> },
+    { id: 3, content: "Settings", to: "/comingsoon", icon: <LuSettings /> },
+    { id: 4, content: "Help", to: "/comingsoon", icon: <LuCircleHelp /> },
   ];
 
   const UserMenu = () => {
@@ -42,9 +43,18 @@ export default function Header() {
     return (
       <div className="relative flex items-center gap-2">
         {/* Avatar */}
-        <div className="inline-flex items-center justify-center rounded-full border border-[#9747FF]
-          bg-[#D9D9D9] w-12 h-12 sm:w-14 sm:h-14 text-lg sm:text-xl font-bold text-gray-800">
-          {getInitials(user.fullName)}
+        <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-[#9747FF] overflow-hidden bg-[#D9D9D9]">
+          {user?.profileImage ? (
+            <img
+              src={user.profileImage}
+              alt="Profile"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <span className="text-lg sm:text-xl font-bold text-gray-800">
+              {getInitials(user.fullName)}
+            </span>
+          )}
         </div>
 
         {/* Toggle */}
@@ -93,21 +103,19 @@ export default function Header() {
     { id: 3, pathName: 'Create event', to: '/create-event' },
   ];
 
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
       <div className="page-container flex justify-between items-center py-5">
-        {/* --- Logo --- */}
-        <a href="/">
+        {/* Logo */}
+        <Link to="/">
           <img
             src={mbLogo}
             alt="Logo"
             className="w-28 sm:w-32 md:w-36 lg:w-40 xl:w-44 2xl:w-48 h-auto object-contain"
           />
-        </a>
+        </Link>
 
-        {/* --- Desktop Nav --- */}
+        {/* Desktop Nav */}
         <nav className="hidden md:flex gap-10">
           {links.map((link) => (
             <Link
@@ -124,11 +132,9 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* --- Auth Buttons / User Menu --- */}
+        {/* Auth / User Menu */}
         <div className="hidden md:flex gap-4">
-          {user ? (
-            <UserMenu />
-          ) : (
+          {user ? <UserMenu /> : (
             <div className="flex gap-4">
               <Link
                 to="/sign-up"
@@ -146,7 +152,7 @@ export default function Header() {
           )}
         </div>
 
-        {/* --- Mobile Menu Toggle --- */}
+        {/* Mobile Menu Toggle */}
         <button
           onClick={() => setMenuOpen((prev) => !prev)}
           className="md:hidden text-3xl text-[#9747FF] z-[60] relative"
@@ -157,7 +163,7 @@ export default function Header() {
         </button>
       </div>
 
-      {/* --- Mobile Menu --- */}
+      {/* Mobile Menu */}
       <div
         className={`md:hidden fixed top-0 right-0 h-full w-1/2 z-50 transform transition-transform duration-300
           ${menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}
@@ -185,9 +191,7 @@ export default function Header() {
           </nav>
 
           <div className="flex flex-col gap-4 mt-6">
-            {user ? (
-              <UserMenu />
-            ) : (
+            {user ? <UserMenu /> : (
               <>
                 <Link
                   to="/sign-up"

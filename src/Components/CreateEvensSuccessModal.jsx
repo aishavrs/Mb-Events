@@ -20,9 +20,9 @@ export default function CreateEventsSuccessModal({showModal, setShowModal}) {
         <img src={check} alt="Success" className="mx-auto w-16 h-16" />
         <h2 className="text-2xl font-bold mt-4">Awesome</h2>
         <p className="text-gray-600 mt-2">Your event has been created</p>
-        <div className="mt-6">
+        <div className="mt-6 bg-black">
           <Link to="/" onClick={() => setShowModal(false)}>
-            <Button content="Back to home" />
+            <Button content="Your Events" />
           </Link>
         </div>
       </div>

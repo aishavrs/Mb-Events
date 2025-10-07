@@ -13,7 +13,7 @@ export default function HeroSection() {
       style={{ backgroundImage: `url(${heroSectionImage})` }}
     >
       {/* inner content aligned to page container */}
-      <div className="page-container flex items-center py-32 sm:py-40 lg:py-52">
+      <div className="page-container flex items-center py-32 sm:py-40 lg:py-52 ">
         <div className="flex flex-col items-start justify-start gap-3 max-w-lg">
           <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight">
             Discover Unforgettable Experiences With Ease
@@ -27,7 +27,7 @@ export default function HeroSection() {
 
           {user ? (
             <Link
-              to="/createevent"
+              to="/create-event"
               className="bg-[#9747FF] text-white rounded-md px-8 py-3 sm:px-10 sm:py-4 md:px-12 md:py-4 text-base sm:text-md md:text-lg hover:bg-purple-700 transition inline-flex items-center"
             >
               Create Event

@@ -20,6 +20,11 @@ import CreateEvent from './Pages/CreateEvent'
 import ComingSoon from './Components/ComingSoon'
 import ProtectRoute from './Components/ProtectRoute'
 import YourEvents from './Pages/YourEvents'
+import Profile from './Pages/Profile'
+import AboutPage from './Pages/AboutPage'
+import ContactPage from './Pages/ContactPage'
+import AllCategoriesPage from './Pages/AllCategoriesPage'
+import CategoryPage from './Pages/CategoryPage';
 
 
 
@@ -43,10 +48,16 @@ export default function App() {
       <Route path='/event' element={<ProtectRoute><EventPage/></ProtectRoute>}/>
       <Route path='/event-details' element={<EventDetails/>}/>
       <Route path='*' element={<Error/>}/>
-      <Route path="/event/:id" element={<EventDetails/>} />
+      <Route path="/events/:id" element={<EventDetails/>} />
       <Route path="/create-event" element={<ProtectRoute><CreateEvent/></ProtectRoute>} />
       <Route path="/comingsoon" element={<ComingSoon/>} />
       <Route path="/yourevents" element={<ProtectRoute><YourEvents/></ProtectRoute>} />
+      <Route path="/profile" element={<Profile/>}/>
+      <Route path="/about" element={<AboutPage/>}/>
+      <Route path="/contact" element={<ContactPage/>}/>
+      <Route path="/categories" element={<AllCategoriesPage/>}/>
+      <Route path="/categories/:categoryName" element={<CategoryPage />} />
+
 
 
     </Routes>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import mbLogo from "../assets/mb-event-logo-white.png";
+import mbLogo from "../assets/mb-event-logo.png"
 import { LuFacebook, LuInstagram, LuTwitter, LuYoutube } from "react-icons/lu";
 import { toast } from "react-toastify";
 
@@ -128,12 +128,12 @@ export default function Footer() {
             >
               Events
             </Link>
-            <li className="hover:text-purple-400 cursor-pointer transition">
+            <Link to="/about" className="hover:text-purple-400 cursor-pointer transition">
               About
-            </li>
-            <li className="hover:text-purple-400 cursor-pointer transition">
+            </Link>
+            <Link to="/contact" className="hover:text-purple-400 cursor-pointer transition">
               Contact
-            </li>
+            </Link>
           </ul>
         </div>
 

@@ -45,9 +45,13 @@ export default function HomePage() {
             <h1 className="font-medium text-xl sm:text-2xl lg:text-3xl">
               Event Categories
             </h1>
-            <Link to="#" className="text-base sm:text-lg lg:text-xl text-[#9747FF] hover:underline">
-              See All
-            </Link>
+            <Link
+  to="/categories"
+  className="text-base sm:text-lg lg:text-xl text-[#9747FF] hover:underline"
+>
+  See All
+</Link>
+
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
@@ -83,9 +87,9 @@ export default function HomePage() {
               <p className="text-sm sm:text-base">
                 Bring your vision to life by creating and hosting your own event. From intimate meetups to large-scale gatherings, our easy-to-use platform helps you manage everything—from ticketing to promotion. Engage with your audience, track your attendees, and make your event a success in just a few steps.
               </p>
-              <button className="bg-[#0E021E] px-4 py-2 text-white rounded-sm w-full sm:w-[60%]">
+              <Link to="/create-event" className="bg-[#0E021E] px-4 py-2 text-white text-center rounded-sm w-full sm:w-[60%]">
                 Create Event
-              </button>
+              </Link>
             </div>
           </div>
         </div>
