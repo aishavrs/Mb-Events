@@ -146,7 +146,7 @@ export default function CreateEventForm() {
       }
     });
 
-    const baseUrl = import.meta.env.VITE_EVENT_URL || "http://localhost:5000/api";
+    const baseUrl = import.meta.env.VITE_EVENT_URL;
     const endpoint = `${baseUrl.replace(/\/$/, "")}/user/event/createevent`;
     const token = localStorage.getItem("token");
 

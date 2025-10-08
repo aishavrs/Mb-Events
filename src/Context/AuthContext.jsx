@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
 
-  const BASE_URL = "http://localhost:5000/api/user";
+  const BASE_URL = "https://mb-events-auth-2.onrender.com/api/user";
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
