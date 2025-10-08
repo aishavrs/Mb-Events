@@ -127,7 +127,6 @@ export default function CreateEventForm() {
 
   // Handle final submit
   const handleSubmit = async (e) => {
-    // Note: EventPreview may call this directly; some callers pass the event, some don't.
     if (e && e.preventDefault) e.preventDefault();
 
     if (!formValidate()) {
@@ -138,31 +137,19 @@ export default function CreateEventForm() {
 
     // Build FormData
     const data = new FormData();
-    if (photo) data.append("photo", photo); // name should match backend expectation
-    // tags: send as JSON string or CSV depending on backend; using JSON string is explicit
+    if (photo) data.append("photo", photo);
     data.append("tags", JSON.stringify(formData.tags));
 
     Object.entries(formData).forEach(([key, value]) => {
       if (key !== "tags") {
-        // stringify booleans to ensure backend receives them (FormData stores strings)
-        if (typeof value === "boolean") {
-          data.append(key, value ? "true" : "false");
-        } else {
-          data.append(key, value ?? "");
-        }
+        data.append(key, typeof value === "boolean" ? (value ? "true" : "false") : value ?? "");
       }
     });
 
-    // Safe base URL: use env variable, fallback to localhost api
     const baseUrl = import.meta.env.VITE_EVENT_URL || "http://localhost:5000/api";
     const endpoint = `${baseUrl.replace(/\/$/, "")}/user/event/createevent`;
-
-    // Debug logs to help you confirm what's being sent (remove in production)
-    console.log("VITE_EVENT_URL:", import.meta.env.VITE_EVENT_URL);
-    console.log("Constructed fetch URL:", endpoint);
-    console.log("localStorage token:", localStorage.getItem("token"));
-
     const token = localStorage.getItem("token");
+
     if (!token) {
       setIsLoading(false);
       return toast.error("User not authenticated");
@@ -171,27 +158,17 @@ export default function CreateEventForm() {
     try {
       const response = await fetch(endpoint, {
         method: "POST",
-        headers: {
-          // IMPORTANT: do NOT set Content-Type when sending FormData
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: data,
       });
 
-      // Try parsing JSON, but handle non-JSON responses gracefully
+      // Read body once
+      const text = await response.text();
       let result = null;
       try {
-        result = await response.json();
-      } catch (err) {
-        // Backend returned non-JSON (maybe HTML or empty). Log it for debugging.
-        const text = await response.text();
-        console.error("Backend returned non-JSON:", text);
-        // If it's an error status, notify the user
-        if (!response.ok) {
-          toast.error("Server error. Please try again later.");
-          setIsLoading(false);
-          return;
-        }
+        result = text ? JSON.parse(text) : null;
+      } catch {
+        console.warn("Response is not JSON:", text);
       }
 
       if (response.ok) {
@@ -200,8 +177,7 @@ export default function CreateEventForm() {
         // optionally reset form or navigate:
         // setFormData(initialFormData); setPhoto(null);
       } else {
-        // prefer message from backend if available
-        const message = result?.message || result?.error || "Failed to create an event, try again!";
+        const message = result?.message || result?.error || "Failed to create an event!";
         toast.error(message);
       }
     } catch (error) {
@@ -223,7 +199,6 @@ export default function CreateEventForm() {
     }
   };
 
-  // Allow users to change the selected photo
   const handleEditPhoto = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -430,7 +405,7 @@ export default function CreateEventForm() {
             </div>
           </div>
 
-          {/* Pricing */}
+          {/* Pricing & Buttons */}
           <h1 className="text-lg font-semibold py-2">Pricing</h1>
           <div className="flex items-center gap-20 lg:py-0 lg:gap-[250px]">
             <label className="font-semibold" htmlFor="free">Free</label>
@@ -444,67 +419,62 @@ export default function CreateEventForm() {
                 type="checkbox"
               />
               <label htmlFor="free-toggle" className="toggle-labelFree"></label>
-              {errors.free && <p className="text-red-900 font-semibold">{errors.free}</p>}
             </div>
           </div>
 
           {!formData.free && (
             <>
-              {/* Regular */}
-              <label className="block font-semibold" htmlFor="regular">Regular</label>
-              <div className="flex items-center gap-20 lg:gap-[250px]">
-                <input
-                  className="w-[150px] lg:w-sm px-3 py-2 rounded bg-gray-200 text-black"
-                  type="text"
-                  name="regular"
-                  onChange={handleChange}
-                  value={formData.regular}
-                />
-                {errors.regular && <p className="text-red-900 font-semibold">{errors.regular}</p>}
-
-                <div className="toggle-containerRegular">
+              {/* Regular & VIP */}
+              <div>
+                <label className="block font-semibold" htmlFor="regular">Regular</label>
+                <div className="flex items-center gap-20 lg:gap-[250px]">
                   <input
-                    id="regular-toggle"
-                    className="toggle-inputRegular"
-                    type="checkbox"
-                    name="regularEnabled"
-                    checked={formData.regularEnabled}
+                    className="w-[150px] lg:w-sm px-3 py-2 rounded bg-gray-200 text-black"
+                    type="text"
+                    name="regular"
                     onChange={handleChange}
+                    value={formData.regular}
                   />
-                  <label htmlFor="regular-toggle" className="toggle-labelRegular"></label>
-                  {errors.regularEnabled && <p className="text-red-900 font-semibold">{errors.regularEnabled}</p>}
+                  {errors.regular && <p className="text-red-900 font-semibold">{errors.regular}</p>}
+                  <div className="toggle-containerRegular">
+                    <input
+                      id="regular-toggle"
+                      className="toggle-inputRegular"
+                      type="checkbox"
+                      name="regularEnabled"
+                      checked={formData.regularEnabled}
+                      onChange={handleChange}
+                    />
+                    <label htmlFor="regular-toggle" className="toggle-labelRegular"></label>
+                  </div>
                 </div>
-              </div>
 
-              {/* VIP */}
-              <label className="block font-semibold" htmlFor="VIP">VIP</label>
-              <div className="flex items-center gap-20 lg:gap-[250px]">
-                <input
-                  name="vip"
-                  value={formData.vip}
-                  onChange={handleChange}
-                  className="w-[150px] lg:w-sm px-3 py-2 rounded bg-gray-200 text-black"
-                  type="text"
-                />
-                {errors.vip && <p className="text-red-900 font-semibold">{errors.vip}</p>}
-
-                <div className="toggle-containerVIP">
+                <label className="block font-semibold" htmlFor="VIP">VIP</label>
+                <div className="flex items-center gap-20 lg:gap-[250px]">
                   <input
-                    id="VIP-toggle"
-                    className="toggle-inputVIP"
+                    name="vip"
+                    value={formData.vip}
                     onChange={handleChange}
-                    name="vipEnabled"
-                    checked={formData.vipEnabled}
-                    type="checkbox"
+                    className="w-[150px] lg:w-sm px-3 py-2 rounded bg-gray-200 text-black"
+                    type="text"
                   />
-                  <label htmlFor="VIP-toggle" className="toggle-labelVIP"></label>
-                  {errors.vipEnabled && <p className="text-red-900 font-semibold">{errors.vipEnabled}</p>}
+                  {errors.vip && <p className="text-red-900 font-semibold">{errors.vip}</p>}
+                  <div className="toggle-containerVIP">
+                    <input
+                      id="VIP-toggle"
+                      className="toggle-inputVIP"
+                      onChange={handleChange}
+                      name="vipEnabled"
+                      checked={formData.vipEnabled}
+                      type="checkbox"
+                    />
+                    <label htmlFor="VIP-toggle" className="toggle-labelVIP"></label>
+                  </div>
                 </div>
               </div>
             </>
           )}
 
-          {/* Buttons */}
           <div className="flex gap-25 py-5">
             <button
               type="button"

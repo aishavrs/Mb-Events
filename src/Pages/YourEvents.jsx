@@ -4,21 +4,31 @@ import { EventContext } from "../Context/EventContext";
 import SingleEvent from "../Components/SingleEvent";
 
 export default function YourEvents() {
-  const { fetchUsersEvents,userEvents, loading, error } = useContext(EventContext);
+  const { fetchUsersEvents, userEvents, loading, error, user, token } = useContext(EventContext);
   const [activeBtn, setActiveBtn] = useState(1);
 
   const btns = [
     { id: 1, content: "Hosting", type: "hosting" },
     { id: 2, content: "Attending", type: "attending" },
     { id: 3, content: "Previous", type: "previous" },
+    { id: 4, content: "Tickets", type: "tickets" },
   ];
 
   const activeType = btns.find((b) => b.id === activeBtn).type;
   const currentEvents = userEvents[activeType] || [];
+
+  // ✅ Only fetch events when user + token exist
   useEffect(() => {
-      fetchUsersEvents(activeType).then((res) => {
-      console.log("Events for", activeType, res);});
-  }, [activeType,]);
+    if (!user || !token) {
+      console.warn("⚠️ Waiting for user and token before fetching events...");
+      return;
+    }
+
+    const id = user._id || user.id;
+    console.log("👤 Fetching events for user:", id, "type:", activeType);
+
+    fetchUsersEvents(activeType, id);
+  }, [activeType, user, token]); // react when activeType/user/token changes
 
   return (
     <AppLayout>
@@ -26,6 +36,7 @@ export default function YourEvents() {
         <div className="container mx-auto">
           <h1 className="text-start text-2xl font-bold pb-5">Your Events</h1>
 
+          {/* ✅ Filter Buttons */}
           <div className="flex gap-4 rounded-md my-3 mx-auto">
             {btns.map((btn) => {
               const isActive = btn.id === activeBtn;
@@ -44,6 +55,7 @@ export default function YourEvents() {
             })}
           </div>
 
+          {/* ✅ Event Display Section */}
           <div className="mt-6">
             {loading ? (
               <p>Loading...</p>
@@ -59,7 +71,6 @@ export default function YourEvents() {
               <p className="text-gray-500">No events found</p>
             )}
           </div>
-
         </div>
       </div>
     </AppLayout>

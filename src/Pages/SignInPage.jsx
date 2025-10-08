@@ -15,7 +15,7 @@ export default function SignInPage() {
 
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -63,12 +63,15 @@ export default function SignInPage() {
     <div>
       <AuthLayout image={signInImage}>
         <div className="flex flex-col items-center lg:mt-[12%] w-full">
+          {/* Clickable Logo */}
           <div className="flex justify-center mb-6">
-            <img
-              src={MbEventLogo}
-              alt="MB Event Logo"
-              className="w-32 sm:w-40 md:w-44 lg:w-48"
-            />
+            <Link to="/" className="block">
+              <img
+                src={MbEventLogo}
+                alt="MB Event Logo"
+                className="w-32 sm:w-40 md:w-44 lg:w-48 cursor-pointer hover:opacity-80 transition"
+              />
+            </Link>
           </div>
 
           <div className="w-full max-w-md lg:max-w-lg px-6 sm:px-10 lg:px-0">

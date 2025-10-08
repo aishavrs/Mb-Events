@@ -44,15 +44,17 @@ export default function EventPage() {
           <div className="flex flex-wrap justify-center gap-3 mt-4 w-full sm:w-auto">
             <DropdownFilter
               label="Location"
-              options={["Online", "On-site", "Hybrid"]}
+              options={["Online", "Lagos", "Ogun", "Abuja", "Port-Harcourt", "Ibadan"]}
               selected={tempLocation}
               setSelected={setTempLocation}
+              showSelectAll={false}
             />
             <DropdownFilter
               label="Date"
               options={["Today", "Tomorrow", "This Week", "This Month"]}
               selected={tempDate}
               setSelected={setTempDate}
+              showSelectAll={false}
             />
             <DropdownFilter
               label="Category"
@@ -68,10 +70,18 @@ export default function EventPage() {
               ]}
               selected={tempCategory}
               setSelected={setTempCategory}
+              showSelectAll={false}
             />
             <DropdownFilter
               label="Tag"
-              options={["Networking", "Workshop", "Webinar", "Competition", "Meetup"]}
+              options={["Sports",
+                "Party",
+                "Education",
+                "Tech",
+                "Concerts",
+                "Religion",
+                "Games",
+                "Dance",]}
               selected={tempTag}
               setSelected={setTempTag}
             />

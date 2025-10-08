@@ -1,0 +1,6 @@
+event creation flow 
+display user events (all events db, ...userevents )
+
+Homepage
+upcoming events
+Event near you

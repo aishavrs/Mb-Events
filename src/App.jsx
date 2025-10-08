@@ -46,16 +46,15 @@ export default function App() {
       <Route path='/hero' element={<HeroSection/>}/>
       <Route path='/' element={<HomePage/>}/>
       <Route path='/event' element={<ProtectRoute><EventPage/></ProtectRoute>}/>
-      <Route path='/event-details' element={<EventDetails/>}/>
       <Route path='*' element={<Error/>}/>
-      <Route path="/events/:id" element={<EventDetails/>} />
+      <Route path="/event/:id" element={<EventDetails/>} />
       <Route path="/create-event" element={<ProtectRoute><CreateEvent/></ProtectRoute>} />
       <Route path="/comingsoon" element={<ComingSoon/>} />
       <Route path="/yourevents" element={<ProtectRoute><YourEvents/></ProtectRoute>} />
       <Route path="/profile" element={<Profile/>}/>
       <Route path="/about" element={<AboutPage/>}/>
       <Route path="/contact" element={<ContactPage/>}/>
-      <Route path="/categories" element={<AllCategoriesPage/>}/>
+      <Route path="/categories" element={<ProtectRoute><AllCategoriesPage/></ProtectRoute>}/>
       <Route path="/categories/:categoryName" element={<CategoryPage />} />
 
 
